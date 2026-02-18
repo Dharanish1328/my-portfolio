@@ -6,7 +6,7 @@ import "./App.css";
 // Import images for both themes
 import profileImageLight from './image/dharanish-2.png'; // Image for light mode
 import profileImageDark from './image/dharanish-1.png';   // Image for dark mode
-
+import cvFile from './image/A DHARANISH (2).pdf'; // Import the PDF
 // Theme Toggle Component
 const ThemeToggle = ({ onThemeChange }) => {
   const [isDark, setIsDark] = useState(() => {
@@ -423,12 +423,12 @@ const App = () => {
               </div>
 
               <div className="hero-cta-wrapper">
-                <a href="/cv.pdf" download className="premium-button primary">
+                <a href={cvFile} download="A_DHARANISH_CV.pdf" className="premium-button primary">
                   <span>Download CV</span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M4 12H12M8 4V10M8 10L10 8M8 10L6 8" stroke="currentColor" strokeWidth="1.5"/>
-                  </svg>
-                </a>
+                    </svg>
+                    </a>
                 
                 <a href="#projects" className="premium-button secondary">
                   <span>View Work</span>
