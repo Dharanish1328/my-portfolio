@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./App.css";
+import emailjs from '@emailjs/browser';
 
 // Import images for both themes
 import profileImageLight from './image/dharanish-2.png'; // Image for light mode
 import profileImageDark from './image/dharanish-1.png';   // Image for dark mode
 import cvFile from './image/A DHARANISH (2).pdf'; // Import the PDF
+
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = 'service_c5oqm4e';
+const EMAILJS_AUTOREPLY_TEMPLATE_ID = 'template_7c1ndf7';  // Auto-reply to sender
+const EMAILJS_NOTIFICATION_TEMPLATE_ID = 'template_notification'; // You need to create this
+const EMAILJS_PUBLIC_KEY = 'HBCORsEYG9N7zNhuH'; // Get from EmailJS dashboard (Account > API Keys)
+
 // Theme Toggle Component
 const ThemeToggle = ({ onThemeChange }) => {
   const [isDark, setIsDark] = useState(() => {
@@ -73,6 +81,11 @@ const App = () => {
   });
   const [formStatus, setFormStatus] = useState('');
 
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }, []);
+
   useEffect(() => {
     // Initial loading animation
     setTimeout(() => setIsLoading(false), 2000);
@@ -117,19 +130,46 @@ const App = () => {
     setIsDarkTheme(isDark);
   };
 
-  // Handle form submission
+  // Handle form submission with EmailJS
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormStatus('sending');
     
-    // Simulate form submission
-    setTimeout(() => {
+    // Template parameters for both emails
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message
+    };
+    
+    // Send notification to yourself (you need to create this template)
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NOTIFICATION_TEMPLATE_ID, templateParams)
+      .then(() => {
+        console.log('✅ Notification sent to your inbox');
+      })
+      .catch((error) => {
+        console.error('❌ Notification failed:', error);
+      });
+    
+    // Send auto-reply to the person who contacted you
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_AUTOREPLY_TEMPLATE_ID, {
+      name: formData.name,
+      email: formData.email,  // This goes in the "To Email" field
+      subject: formData.subject
+    })
+    .then(() => {
       setFormStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
       
       // Reset success message after 3 seconds
       setTimeout(() => setFormStatus(''), 3000);
-    }, 1500);
+    })
+    .catch((error) => {
+      console.error('❌ Auto-reply failed:', error);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus(''), 3000);
+    });
   };
 
   // Handle input changes
@@ -760,6 +800,8 @@ const App = () => {
                               <>Sending<span className="loading-dots"><span></span><span></span><span></span></span></>
                             ) : formStatus === 'success' ? (
                               <>Message Sent! <span>✓</span></>
+                            ) : formStatus === 'error' ? (
+                              <>Failed. Try Again <span>✗</span></>
                             ) : (
                               <>
                                 <span>Send Message</span>
@@ -780,7 +822,6 @@ const App = () => {
         </div>
       </section>
 
-      {/* Footer - Enhanced Design */}
       {/* Footer - Simplified Design */}
 <footer className="simple-footer">
   <div className="container">
