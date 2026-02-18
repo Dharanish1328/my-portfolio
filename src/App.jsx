@@ -642,8 +642,8 @@ const App = () => {
                     <div className="contact-info">
                       <div className="contact-info-item">
                         <span className="info-label">Email</span>
-                        <a href="mailto:dharanish@example.com" className="info-value">
-                          dharanish@example.com
+                        <a href="mailto:dharania81@gmail.com" className="info-value">
+                          dharania81@gmail.com
                           <span className="info-glow"></span>
                         </a>
                       </div>
@@ -654,7 +654,7 @@ const App = () => {
                       <div className="contact-info-item">
                         <span className="info-label">Phone</span>
                         <a href="tel:+919876543210" className="info-value">
-                          +91 98765 43210
+                          +91 73390 90076
                           <span className="info-glow"></span>
                         </a>
                       </div>
